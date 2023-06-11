@@ -5,13 +5,23 @@ const { readdirSync } = require("fs")
 const moment = require("moment");
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
+const mongoose = require('mongoose');
 
 let token = config.token
 
 client.commands = new Collection()
 client.slashcommands = new Collection()
 client.commandaliases = new Collection()
+client.Database = require('./src/database/mongodb.js')
 
+mongoose.connect(config.mongo, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  log('MongoDB Connected.')
+}).catch((err) => {
+  log(err)
+})
 const rest = new REST({ version: '10' }).setToken(token);
 
 const log = x => { console.log(`[${moment().format("DD-MM-YYYY HH:mm:ss")}] ${x}`) };
@@ -34,6 +44,10 @@ readdirSync('./src/commands/slash').forEach(async file => {
   slashcommands.push(command.data.toJSON());
   client.slashcommands.set(command.data.name, command);
 })
+
+
+
+
 
 client.on("ready", async () => {
         try {
@@ -69,3 +83,7 @@ process.on("uncaughtExceptionMonitor", e => {
  })
 
 client.login(token)
+
+
+
+require("./express.js");
