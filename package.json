@@ -1,4 +1,6 @@
 {
+    "name": "v14.tutorials",
+    "version": "1.0.0",
     "scripts": {
         "start": "node ."
     },
