@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const User = require('../../database/schema/user.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,30 +7,15 @@ module.exports = {
     .setDescription('Profilinizi görüntülersiniz.'),
   async run(client, interaction) {
 
-    try {
-      const data = await User.findOne({
-        id: interaction.user.id,
-      });
+    const data = await client.Database.fetchUser(interaction.user.id);
 
-      if (!data) {
-        User.create({
-          id: interaction.user.id,
-          registeredAt: Date.now(),
-        });
+    const embed = new EmbedBuilder()
+      .addFields(
+        { name: "Kayıt Tarihi", value: `<t:${Math.floor(data.registeredAt / 1000)}:R>`, inline: true },
+        { name: "ID", value: data.id, inline: true },
+      )
+    return interaction.reply({ embeds: [embed], ephemeral: true });
 
-        interaction.reply({ content: 'Profiliniz oluşturuldu. Lütfen komutu tekrar kullanın.', ephemeral: true });
-      }
 
-      if (data) {
-        const embed = new EmbedBuilder()
-          .addFields(
-            { name: "Kayıt Tarihi", value: `<t:${Math.floor(data.registeredAt / 1000)}:R>`, inline: true },
-            { name: "ID", value: data.id, inline: true },
-          )
-       return  interaction.reply({ embeds: [embed], ephemeral: true });
-      }
-    } catch (error) {
-      console.log(error);
-    }
   }
 };
