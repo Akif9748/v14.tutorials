@@ -4,7 +4,7 @@ module.exports = {
     name: "ping",
     aliases: ["pong"],
     cooldown: 5000,
-    run: async (client, message, args) => {
-      message.reply(`Pong 🏓`)
+    async run(client, message, args) {
+      return message.reply(`Pong 🏓`)
     }
  };
