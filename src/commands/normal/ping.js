@@ -1,5 +1,3 @@
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
-
 module.exports = {
     name: "ping",
     aliases: ["pong"],
